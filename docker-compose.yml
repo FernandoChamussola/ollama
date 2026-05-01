@@ -4,12 +4,23 @@ services:
   ai-service:
     build: .
     container_name: ai-log-service
-    ports:
-      - "8000:8000"
-    volumes:
-      - ollama_models:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - traefik-public
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
+    volumes:
+      - ollama_models:/root/.ollama
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.iai-localvps.rule=Host(`ialocalvps.duckdns.org`)"
+      - "traefik.http.routers.iai-localvps.entrypoints=websecure"
+      - "traefik.http.routers.iai-localvps.tls.certresolver=letsencrypt"
+      - "traefik.http.services.iai-localvps.loadbalancer.server.port=8000"
 
 volumes:
   ollama_models:
+
+networks:
+  traefik-public:
+    external: true
