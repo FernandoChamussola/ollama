@@ -7,6 +7,10 @@ app = FastAPI()
 class LogRequest(BaseModel):
     logs: str
 
+@app.get("/")
+def root():
+    return {"message": "Bem-vindo ao AI Log Analyzer! Use o endpoint /analyze para analisar logs."}
+
 def analyze(logs):
     prompt = f"""
 Analisa estes logs e explica em linguagem simples o que aconteceu:
