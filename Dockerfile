@@ -1,17 +1,16 @@
-FROM python:3.10-slim
+FROM ollama/ollama:latest
 
 WORKDIR /app
 
-# dependências Python
+# instalar Python e dependências
+RUN apt-get update && apt-get install -y python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# código
-COPY app/ ./app
-
-# instalar Ollama dentro do container
-RUN apt-get update && apt-get install -y curl \
-    && curl -fsSL https://ollama.com/install.sh | sh
+# código - cria pasta app/
+COPY app ./app
 
 EXPOSE 8000
 
