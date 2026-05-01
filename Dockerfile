@@ -2,12 +2,12 @@ FROM ollama/ollama:latest
 
 WORKDIR /app
 
-# instalar Python e dependências
+# instalar Python e pip
 RUN apt-get update && apt-get install -y python3 python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+# instalar dependências uma a uma para evitar erros
+RUN pip3 install --no-cache-dir fastapi uvicorn pydantic
 
 # código - cria pasta app/
 COPY app ./app
