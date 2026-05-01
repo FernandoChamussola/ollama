@@ -1,20 +1,25 @@
-FROM ollama/ollama:latest
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# instalar Python e pip
-RUN apt-get update && apt-get install -y python3 python3-pip && \
-    rm -rf /var/lib/apt/lists/*
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    curl \
+    zstd \
+    && rm -rf /var/lib/apt/lists/*
 
-# instalar dependências uma a uma para evitar erros
-RUN pip3 install --no-cache-dir fastapi uvicorn pydantic
+# Baixar e instalar Ollama manualmente
+RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# código - cria pasta app/
+# Instalar dependências Python
+RUN pip install --no-cache-dir fastapi uvicorn pydantic
+
+# Código
 COPY app ./app
 
 EXPOSE 8000
 
 CMD ollama serve & \
-    sleep 5 && \
+    sleep 10 && \
     ollama pull gemma2:2b && \
     uvicorn app.main:app --host 0.0.0.0 --port 8000
