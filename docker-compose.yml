@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.iai-localvps.tls.certresolver=letsencrypt"
       - "traefik.http.services.iai-localvps.loadbalancer.server.port=8000"
 
-  ollama:
+    ollama:
     image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
@@ -29,7 +29,7 @@ services:
       - traefik-public
     ports:
       - "11434:11434"
-    command: ["sh", "/entrypoint.sh"]
+    command: sh /entrypoint.sh
 
 volumes:
   ollama_models:
