@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  ai-service:
+    build: .
+    container_name: ai-log-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+
+volumes:
+  ollama_models:
